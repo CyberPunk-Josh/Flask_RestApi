@@ -4,10 +4,11 @@ from db import db
 class ItemModel(db.Model):
     __tablename__ = 'items'
 
+    # structure of the database:
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     price = db.Column(db.Float(precision=2))
-
+    # table relationship:
     store_id = db.Column(db.Integer, db.ForeignKey('stores.id'))
     store = db.relationship('StoreModel')
 
@@ -20,6 +21,7 @@ class ItemModel(db.Model):
         return {'name': self.name, 'price': self.price}
 
     @classmethod
+    # "cls" its because its a class
     def find_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
 

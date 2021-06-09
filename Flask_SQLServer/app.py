@@ -1,16 +1,18 @@
-from sqlalchemy import create_engine
+from flask import Flask
+from flask_restful import Api
+from db import db
 
-# Windows auth
-Server = 'LAPTOP-2OCJA2M7\SQLEXPRESS'
-Database = 'test'
-Driver = 'ODBC Driver 17 for SQL Server'
-Database_con = f'mssql://@{Server}/{Database}?driver={Driver}'
+from resources.users import UserRegister
 
-engine = create_engine(Database_con)
-con = engine.connect()
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "mssql+pyodbc://server/table?driver=ODBC Driver 17 for " \
+                                        "SQL Server?trusted_connection=yes "
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.secret_key = 'joshue'
+api = Api(app)
 
-if con:
-    print('Conexion establecida!')
+api.add_resource(UserRegister, '/register')
 
-
-
+if __name__ == '__main__':
+    db.init_app(app)
+    app.run(port=5000, debug=True)
